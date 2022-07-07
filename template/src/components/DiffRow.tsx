@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import {
   AccordionItem,
   AccordionButton,
@@ -42,8 +43,11 @@ export const DiffRow = ({ diff }: DiffRowProps) => {
   const [diffJson, setDiffJson] = useState<String | null>(null);
   const [conciseView, setConciseView] = useState(true);
 
+  let params = useParams();
+  let reportId = params.reportId;
+
   const getActualData = () => {
-    fetch(diff.actual)
+    fetch(reportId ? `/${reportId}/${diff.actual}` : diff.actual)
       .then((res) => res.json())
       .then((data) => {
         setActualJson(data);
@@ -51,7 +55,7 @@ export const DiffRow = ({ diff }: DiffRowProps) => {
   };
 
   const getExpectedData = () => {
-    fetch(diff.expected)
+    fetch(reportId ? `/${reportId}/${diff.expected}` : diff.expected)
       .then((res) => res.json())
       .then((data) => {
         setExpectedJson(data);
@@ -59,7 +63,7 @@ export const DiffRow = ({ diff }: DiffRowProps) => {
   };
 
   const getDiffData = () => {
-    fetch(diff.diff)
+    fetch(reportId ? `/${reportId}/${diff.diff}` : diff.diff)
       .then((res) => res.text())
       .then((data) => {
         setDiffJson(data);

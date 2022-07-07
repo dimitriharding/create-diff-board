@@ -28,6 +28,7 @@
     "react-dom": "^18.1.0",
     "react-icons": "^4.4.0",
     "react-iframe": "^1.8.0",
+    "react-router-dom": "^6.3.0",
     "react-syntax-highlighter": "^15.5.0",
     "vite-plugin-prismjs": "^0.0.8"
   },
