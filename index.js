@@ -55,7 +55,6 @@ program.parse();
 const options = program.opts();
 destination = path.join("./", projectName);
 const templateDestination = path.join(destination, "/template");
-const buildDestination = path.join(destination, "/build");
 
 function startPreview() {
     execSync(`npm run preview`, { cwd: destination, stdio: 'inherit' });
@@ -77,27 +76,35 @@ async function devBuildProject() {
 }
 
 async function main() {
+    const hash = new Date().getTime().toString();
+    const hashDestination = path.join(destination, `/${hash}`);
+    const buildDestination = path.join(destination, "/build");
 
     console.log(colorsx.green(`=> "${projectName}" project building...`));
 
-    // create build folder with diff results
-    await copyFiles(path.join("./", '/diff-reports'), buildDestination)
+    if (!options['ciServer']) {
+        // create build folder with diff results
+        await copyFiles(path.join("./", '/diff-reports'), buildDestination)
 
-    // create assets folder with index.js
-    const assetsDir = path.join(buildDestination, "assets");
+        // create assets folder with index.js
+        const assetsDir = path.join(buildDestination, "assets");
 
-    if (!fsx.existsSync(assetsDir)) fsx.mkdirSync(assetsDir);
-    fsx.copyFileSync(path.join(modulePath, '/dist/index.js'), path.join(buildDestination, '/assets/index.js'));
+        if (!fsx.existsSync(assetsDir)) fsx.mkdirSync(assetsDir);
+        fsx.copyFileSync(path.join(modulePath, '/dist/index.js'), path.join(buildDestination, '/assets/index.js'));
 
-    // copy index.html to build folder
-    fsx.copyFileSync(path.join(modulePath, '/dist/index.html'), path.join(buildDestination, '/index.html'));
+        // copy index.html to build folder
+        fsx.copyFileSync(path.join(modulePath, '/dist/index.html'), path.join(buildDestination, '/index.html'));
 
-    // Create the package.json file
-    fsx.writeFileSync(destination + "/package.json", JSON.stringify(packageJSON(projectName), null, 2));
+        // Create the package.json file
+        fsx.writeFileSync(destination + "/package.json", JSON.stringify(packageJSON(projectName), null, 2));
 
-    console.log(colorsx.grey(`=> To serve the build, run: ${colorsx.magenta(`npx serve ${projectName}/build -p 5050`)}`));
+        console.log(colorsx.grey(`=> To serve the build, run: ${colorsx.magenta(`npx serve ${projectName}/build -p 5050`)}`));
 
-    if (!options['ciServer']) startPreview();
+        startPreview();
+    } else {
+        // create build folder with diff results
+        await copyFiles(path.join("./", '/diff-reports'), hashDestination)
+    }
 }
 
 main();
