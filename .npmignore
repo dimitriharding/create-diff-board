@@ -5,3 +5,4 @@ package-lock.json
 template/package-lock.json
 template/pnpm-lock.yaml
 template
+build
