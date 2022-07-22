@@ -14,6 +14,7 @@ import { DashboardCardsWithIcon } from "./components/DashboardCardsWithIcon";
 import { DashboardMetadataCards } from "./components/DasboardMetadataCards";
 import { Panels } from "./components/Panels";
 import { GeneratedAt } from "./components/GeneratedAt";
+import { fetchData } from "./utils";
 
 interface IConfig {
   title?: string;
@@ -39,9 +40,11 @@ function App() {
   const [config, setConfig] = useState<IConfig | null>(null);
 
   useEffect(() => {
-    const data = window!.document!.getElementById("config")!.innerHTML;
-    const configData = JSON.parse(data);
-    setConfig(configData as IConfig);
+    // const data = window!.document!.getElementById("config")!.innerHTML;
+    fetchData("config.json", (data) => {
+      const configData = data;
+      setConfig(configData as IConfig);
+    });
   }, []);
 
   if (!config) {

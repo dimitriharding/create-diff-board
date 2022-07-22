@@ -70,8 +70,6 @@ export const DiffRow = ({ diff }: DiffRowProps) => {
 
   useEffect(() => {
     setDiffJson(diff?.diffFound);
-    console.log("actual", diff?.actual?.response);
-    console.log("expected", diff?.expected?.response);
   }, [diff]);
 
   return (
