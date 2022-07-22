@@ -74,3 +74,11 @@ export interface Tag2 {
   name: string;
   line: number;
 }
+
+export interface Spec {
+  id: string;
+  request: Object;
+  response: Object;
+  testName: string;
+  curl: string;
+}

@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
 import {
   AccordionItem,
   AccordionButton,
@@ -18,12 +17,13 @@ import SyntaxHighlighter from "react-syntax-highlighter";
 //@ts-ignore
 import ReactDiffViewer from "react-diff-viewer";
 import { Scenario } from "./Cucumber/Scenario";
-import { Scenario as TestScenario } from "../types/index";
+import { CurlCard } from "./CurlCard";
+import { Scenario as TestScenario, Spec } from "../types/index";
 
 interface DiffRowProps {
   diff: {
-    actual: string;
-    expected: string;
+    actual: Spec;
+    expected: Spec;
     diff: string;
     diffFound: boolean;
     name: string;
@@ -40,35 +40,7 @@ export const DiffRow = ({ diff }: DiffRowProps) => {
   const { colorMode } = useColorMode();
   const [actualJson, setActualJson] = useState<Object | null>(null);
   const [expectedJson, setExpectedJson] = useState<Object | null>(null);
-  const [diffJson, setDiffJson] = useState<String | null>(null);
-  const [conciseView, setConciseView] = useState(true);
-
-  let params = useParams();
-  let reportId = params.reportId;
-
-  const getActualData = () => {
-    fetch(reportId ? `/${reportId}/${diff.actual}` : diff.actual)
-      .then((res) => res.json())
-      .then((data) => {
-        setActualJson(data);
-      });
-  };
-
-  const getExpectedData = () => {
-    fetch(reportId ? `/${reportId}/${diff.expected}` : diff.expected)
-      .then((res) => res.json())
-      .then((data) => {
-        setExpectedJson(data);
-      });
-  };
-
-  const getDiffData = () => {
-    fetch(reportId ? `/${reportId}/${diff.diff}` : diff.diff)
-      .then((res) => res.text())
-      .then((data) => {
-        setDiffJson(data);
-      });
-  };
+  const [diffJson, setDiffJson] = useState<Boolean | null>(null);
 
   const JsonDisplay = ({ json }: { json: string }) => {
     return (
@@ -97,9 +69,9 @@ export const DiffRow = ({ diff }: DiffRowProps) => {
   );
 
   useEffect(() => {
-    getActualData();
-    getExpectedData();
-    getDiffData();
+    setDiffJson(diff?.diffFound);
+    console.log("actual", diff?.actual?.response);
+    console.log("expected", diff?.expected?.response);
   }, [diff]);
 
   return (
@@ -119,18 +91,24 @@ export const DiffRow = ({ diff }: DiffRowProps) => {
         <SimpleGrid columns={1} spacing={4}>
           <Box overflowY={"scroll"} overflow={"auto"}>
             <Stack dir={"vertical"}>
-              {diffJson && (
+              {diff?.actual?.response && diff?.expected?.response && (
                 <Stack dir={"vertical"}>
                   <Text textAlign={"center"}>Diff Comparison</Text>
                   <ReactDiffViewer
-                    newValue={
-                      JSON.stringify(expectedJson, null, 2) || undefined
-                    }
-                    oldValue={JSON.stringify(actualJson, null, 2) || undefined}
+                    oldValue={JSON.stringify(
+                      { response: diff.actual.response },
+                      null,
+                      2
+                    )}
+                    newValue={JSON.stringify(
+                      { response: diff.expected.response },
+                      null,
+                      2
+                    )}
                     splitView={true}
                     renderContent={highlightSyntax}
-                    rightTitle={diff.expected}
-                    leftTitle={diff.actual}
+                    rightTitle={`expected - ${diff?.expected?.testName}`}
+                    leftTitle={`actual - ${diff?.actual?.testName}`}
                     useDarkTheme={colorMode === "dark"}
                   />
                 </Stack>
@@ -150,6 +128,19 @@ export const DiffRow = ({ diff }: DiffRowProps) => {
                   borderBottomRightRadius={"2xl"}
                   title="Expected Test"
                   scenarioData={diff.cucumberReports.expected.scenario}
+                />
+              </SimpleGrid>
+              <Text textAlign={"center"}>
+                {"CURL Commands (click to copy)"}
+              </Text>
+              <SimpleGrid columns={2} spacing={2}>
+                <CurlCard
+                  testName={`[actual] ${diff.group} -  ${diff.name}`}
+                  curl={diff.actual.curl}
+                />
+                <CurlCard
+                  testName={`[expected] ${diff.group} -  ${diff.name}`}
+                  curl={diff.expected.curl}
                 />
               </SimpleGrid>
             </Stack>

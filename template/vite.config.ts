@@ -1,6 +1,7 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import prismjs from "vite-plugin-prismjs";
+import { viteSingleFile } from "vite-plugin-singlefile";
 
 const htmlPlugin = () => {
   return {
@@ -24,6 +25,7 @@ export default defineConfig({
       plugins: [],
       css: false,
     }),
+    viteSingleFile(),
   ],
   server: {
     port: 5034,

@@ -7,6 +7,7 @@ const fsx = require("fs-extra");
 const colorsx = require("colors");
 
 const modulePath = __dirname;
+const appScriptPath = path.join(modulePath, '/dist/index.js');
 
 // Path to template files from which the project will be created
 const template = `${modulePath}/template`;
@@ -36,6 +37,30 @@ const packageJSON = (projectName) => {
         },
     };
 };
+
+const indexHtml = (config) => {
+    const appCode = fsx.readFileSync(appScriptPath, "utf8");
+    return `
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Diff Board</title>
+    </head>
+    <body>
+    <div id="root"></div>
+    <script type="module">
+        ${appCode}
+    </script>
+    <script type="application/json" id="config">
+        ${JSON.stringify(config)}
+    </script>
+    </body>
+</html>    
+`
+}
 
 let projectName = "";
 let destination = "";
@@ -85,6 +110,7 @@ async function main() {
     if (!options['ciServer']) {
         // create build folder with diff results
         await copyFiles(path.join("./", '/diff-reports'), buildDestination)
+        const config = fsx.readFileSync(path.join("./", '/diff-reports', 'config.json'), "utf8");
 
         // create assets folder with index.js
         const assetsDir = path.join(buildDestination, "assets");
@@ -93,7 +119,8 @@ async function main() {
         fsx.copyFileSync(path.join(modulePath, '/dist/index.js'), path.join(buildDestination, '/assets/index.js'));
 
         // copy index.html to build folder
-        fsx.copyFileSync(path.join(modulePath, '/dist/index.html'), path.join(buildDestination, '/index.html'));
+        // fsx.copyFileSync(path.join(modulePath, '/dist/index.html'), path.join(buildDestination, '/index.html'));
+        fsx.writeFileSync(path.join(buildDestination, '/index.html'), indexHtml(JSON.parse(config)));
 
         // Create the package.json file
         fsx.writeFileSync(destination + "/package.json", JSON.stringify(packageJSON(projectName), null, 2));
