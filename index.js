@@ -25,15 +25,33 @@ const copyFiles = (source, destination) => {
     });
 };
 
+const configHtml = (config, indexJs) => `
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Diff Board</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module">
+        ${indexJs}
+    </script>
+    <script type="application/json" id="config">
+        ${JSON.stringify(config)}
+    </script>
+  </body>
+</html>
+`;
+
 const packageJSON = (projectName) => {
     return {
         name: `${projectName}`,
         version: "1.0.0",
         scripts: {
-            dev: "cd ./template && npm run dev",
-            build: "cd ./template && npm run build",
             preview: "cd ./build && npx serve . -p 5050",
-            dep: "cd ./template && npm i --force",
         },
     };
 };
@@ -86,10 +104,12 @@ async function main() {
     if (!options['ciServer']) {
         // create build folder with diff results
         await copyFiles(path.join("./", '/diff-reports'), buildDestination)
-        const config = fsx.readFileSync(path.join("./", '/diff-reports', 'config.json'), "utf8");
+        const config = fsx.readFileSync(path.join("./", '/diff-reports', 'config.json'), 'utf8');
+        const indexJs = fsx.readFileSync(path.join(path.join(modulePath, 'dist/index.js')));
+        const html = configHtml(JSON.parse(config), indexJs);
 
         // copy index.html to build folder
-        fsx.copyFileSync(path.join(modulePath, '/dist/index.html'), path.join(buildDestination, '/index.html'));
+        fsx.writeFileSync(path.join(buildDestination + '/index.html'), html);
 
         // Create the package.json file
         fsx.writeFileSync(destination + "/package.json", JSON.stringify(packageJSON(projectName), null, 2));

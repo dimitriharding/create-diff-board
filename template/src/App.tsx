@@ -40,11 +40,8 @@ function App() {
   const [config, setConfig] = useState<IConfig | null>(null);
 
   useEffect(() => {
-    // const data = window!.document!.getElementById("config")!.innerHTML;
-    fetchData("config.json", (data) => {
-      const configData = data;
-      setConfig(configData as IConfig);
-    });
+    const data = window!.document!.getElementById("config")!.innerHTML;
+    setConfig(JSON.parse(data) as unknown as IConfig);
   }, []);
 
   if (!config) {
