@@ -95,31 +95,33 @@ async function devBuildProject() {
 }
 
 async function main() {
-    const hash = new Date().getTime().toString();
-    const hashDestination = path.join(destination, `/${hash}`);
     const buildDestination = path.join(destination, "/build");
 
     console.log(colorsx.green(`=> "${projectName}" project building...`));
 
+    // create build folder with diff results
+    await copyFiles(path.join("./", '/diff-reports'), buildDestination);
+
+    // read config file
+    const config = fsx.readFileSync(path.join("./", '/diff-reports', 'config.json'), 'utf8');
+
+    // read application script
+    const indexJs = fsx.readFileSync(path.join(path.join(modulePath, 'dist/index.js')));
+
+    // HTML with JavaScript and Config JSON
+    const html = configHtml(JSON.parse(config), indexJs);
+
+    // copy index.html to build folder
+    fsx.writeFileSync(path.join(buildDestination + '/index.html'), html);
+
+    // Create the package.json file
+    fsx.writeFileSync(destination + "/package.json", JSON.stringify(packageJSON(projectName), null, 2));
+
+    console.log(colorsx.grey(`=> To serve the build, run: ${colorsx.magenta(`npx serve ${projectName}/build -p 5050`)}`));
+
+
     if (!options['ciServer']) {
-        // create build folder with diff results
-        await copyFiles(path.join("./", '/diff-reports'), buildDestination)
-        const config = fsx.readFileSync(path.join("./", '/diff-reports', 'config.json'), 'utf8');
-        const indexJs = fsx.readFileSync(path.join(path.join(modulePath, 'dist/index.js')));
-        const html = configHtml(JSON.parse(config), indexJs);
-
-        // copy index.html to build folder
-        fsx.writeFileSync(path.join(buildDestination + '/index.html'), html);
-
-        // Create the package.json file
-        fsx.writeFileSync(destination + "/package.json", JSON.stringify(packageJSON(projectName), null, 2));
-
-        console.log(colorsx.grey(`=> To serve the build, run: ${colorsx.magenta(`npx serve ${projectName}/build -p 5050`)}`));
-
         startPreview();
-    } else {
-        // create build folder with diff results
-        await copyFiles(path.join("./", '/diff-reports'), hashDestination)
     }
 }
 

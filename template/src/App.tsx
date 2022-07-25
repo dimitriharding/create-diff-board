@@ -103,19 +103,6 @@ function App() {
                   <DashboardMetadataCards
                     items={[
                       {
-                        title: "Expected Metadata",
-                        items: [
-                          {
-                            name: "Environment",
-                            value: config?.metadata?.expected?.env,
-                          },
-                          {
-                            name: "URL",
-                            value: config?.metadata?.expected?.url,
-                          },
-                        ],
-                      },
-                      {
                         title: "Actual Metadata",
                         items: [
                           {
@@ -128,6 +115,19 @@ function App() {
                           },
                         ],
                       },
+                      {
+                        title: "Expected Metadata",
+                        items: [
+                          {
+                            name: "Environment",
+                            value: config?.metadata?.expected?.env,
+                          },
+                          {
+                            name: "URL",
+                            value: config?.metadata?.expected?.url,
+                          },
+                        ],
+                      },
                     ]}
                   />
                   <HStack mt={5} justify={"center"}>
@@ -136,11 +136,12 @@ function App() {
                 </Stack>
               ),
             },
+
             {
-              title: "Expected HTML Cucumber Report",
+              title: "Actual HTML Cucumber Report",
               panel: (
                 <Iframe
-                  url="/expected_cucumber_report.html"
+                  url="/actual_cucumber_report.html"
                   width="100%"
                   height="800px"
                   id="myId"
@@ -151,10 +152,10 @@ function App() {
               ),
             },
             {
-              title: "Actual HTML Cucumber Report",
+              title: "Expected HTML Cucumber Report",
               panel: (
                 <Iframe
-                  url="/actual_cucumber_report.html"
+                  url="/expected_cucumber_report.html"
                   width="100%"
                   height="800px"
                   id="myId"

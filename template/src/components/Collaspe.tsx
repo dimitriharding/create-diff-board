@@ -28,12 +28,11 @@ export const Collapse = ({ items }: ICollapseProps) => {
     <Box
       bg={useColorModeValue("gray.50", "gray.900")}
       w={"90%"}
-      p={5}
       shadow="md"
       borderWidth="1px"
       borderRadius={10}
     >
-      <Accordion allowToggle>
+      <Accordion size={"sm"} allowToggle>
         {items.map((item) => {
           return (
             <AccordionItem>

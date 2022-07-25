@@ -12,13 +12,21 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
-import Prism from "prismjs";
-import SyntaxHighlighter from "react-syntax-highlighter";
 //@ts-ignore
 import ReactDiffViewer from "react-diff-viewer";
 import { Scenario } from "./Cucumber/Scenario";
 import { CurlCard } from "./CurlCard";
 import { Scenario as TestScenario, Spec } from "../types/index";
+
+enum DiffMethod {
+  CHARS = "diffChars",
+  WORDS = "diffWords",
+  WORDS_WITH_SPACE = "diffWordsWithSpace",
+  LINES = "diffLines",
+  TRIMMED_LINES = "diffTrimmedLines",
+  SENTENCES = "diffSentences",
+  CSS = "diffCss",
+}
 
 interface DiffRowProps {
   diff: {
@@ -38,35 +46,7 @@ interface DiffRowProps {
 
 export const DiffRow = ({ diff }: DiffRowProps) => {
   const { colorMode } = useColorMode();
-  const [actualJson, setActualJson] = useState<Object | null>(null);
-  const [expectedJson, setExpectedJson] = useState<Object | null>(null);
   const [diffJson, setDiffJson] = useState<Boolean | null>(null);
-
-  const JsonDisplay = ({ json }: { json: string }) => {
-    return (
-      <SyntaxHighlighter language="json">
-        {JSON.stringify(json, null, 1)}
-      </SyntaxHighlighter>
-    );
-  };
-
-  const highlightSyntax = (str: any) => (
-    <span
-      style={{ display: "inline" }}
-      dangerouslySetInnerHTML={{
-        __html: Prism.highlight(str, Prism.languages.javascript, "js"),
-      }}
-    />
-  );
-
-  const chighlightSyntax = (str: any) => (
-    <span
-      style={{ display: "inline" }}
-      dangerouslySetInnerHTML={{
-        __html: Prism.highlight(str, Prism.languages.gherkin, "gherkin"),
-      }}
-    />
-  );
 
   useEffect(() => {
     setDiffJson(diff?.diffFound);
@@ -75,7 +55,7 @@ export const DiffRow = ({ diff }: DiffRowProps) => {
   return (
     <AccordionItem>
       <h2>
-        <Alert status={diff.diffFound ? "error" : "success"}>
+        <Alert p={0} status={diff.diffFound ? "error" : "success"}>
           <AccordionButton>
             <AlertIcon />
             <Box flex="1" textAlign="left">
@@ -89,28 +69,29 @@ export const DiffRow = ({ diff }: DiffRowProps) => {
         <SimpleGrid columns={1} spacing={4}>
           <Box overflowY={"scroll"} overflow={"auto"}>
             <Stack dir={"vertical"}>
-              {diff?.actual?.response && diff?.expected?.response && (
+              {
                 <Stack dir={"vertical"}>
                   <Text textAlign={"center"}>Diff Comparison</Text>
                   <ReactDiffViewer
                     oldValue={JSON.stringify(
-                      { response: diff.actual.response },
+                      { response: diff?.actual?.response },
                       null,
-                      2
+                      1
                     )}
                     newValue={JSON.stringify(
-                      { response: diff.expected.response },
+                      { response: diff?.expected?.response },
                       null,
-                      2
+                      1
                     )}
                     splitView={true}
-                    renderContent={highlightSyntax}
                     rightTitle={`expected - ${diff?.expected?.testName}`}
                     leftTitle={`actual - ${diff?.actual?.testName}`}
                     useDarkTheme={colorMode === "dark"}
+                    compareMethod={DiffMethod.WORDS}
+                    showDiffOnly={true}
                   />
                 </Stack>
-              )}
+              }
               <Text textAlign={"center"}>API Test</Text>
               <SimpleGrid columns={2}>
                 <Scenario

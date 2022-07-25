@@ -32,7 +32,7 @@ export const DiffList = ({ diffResults }: IDiffListProps) => {
       ),
       render: () => {
         return (
-          <Accordion allowMultiple w="full">
+          <Accordion size={"sm"} allowMultiple w="full">
             {diffResults[group].items.map((diff, index) => {
               return <DiffRow key={index} diff={diff} />;
             })}
