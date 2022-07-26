@@ -119,8 +119,8 @@ async function main() {
 
     console.log(colorsx.grey(`=> To serve the build, run: ${colorsx.magenta(`npx serve ${projectName}/build -p 5050`)}`));
 
-
-    if (!options['ciServer']) {
+    // if ci-server is not set, start the preview
+    if (!process.env.ON_CI) {
         startPreview();
     }
 }
