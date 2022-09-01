@@ -1,3 +1,6 @@
 <div class="flex items-center flex-col justify-center">
   <p class="font-thin text-gray-900 dark:text-white">Diff Comparison</p>
+  {{ $testNameAndGroup := print .group "-" .name }} {{ $md5Name := md5
+  ($testNameAndGroup)}} {{ partial "diff-viewer.html" (dict "actual" .actual
+  "expected" .expected "id" $md5Name "name" $testNameAndGroup) }}
 </div>
