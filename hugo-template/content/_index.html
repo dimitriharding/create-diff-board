@@ -1,0 +1,167 @@
+---
+title: Diff Board
+description: Dashboard for displaying diff results
+layout: dashboard
+footer: true
+---
+<div class="mb-4 border-b border-gray-200 dark:border-gray-700">
+  <ul
+    class="flex flex-wrap -mb-px text-sm font-medium text-center"
+    id="myTab"
+    data-tabs-toggle="#myTabContent"
+    role="tablist"
+  >
+    <li class="mr-2" role="presentation">
+      <button
+        class="inline-block p-4 rounded-t-lg border-b-2 text-blue-600 hover:text-blue-600 dark:text-blue-500 dark:hover:text-blue-500 border-blue-600 dark:border-blue-500"
+        id="profile-tab"
+        data-tabs-target="#profile"
+        type="button"
+        role="tab"
+        aria-controls="profile"
+        aria-selected="true"
+      >
+        Diff Report
+      </button>
+    </li>
+    <li class="mr-2" role="presentation">
+      <button
+        class="inline-block p-4 rounded-t-lg border-b-2 border-transparent hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300 dark:border-transparent text-gray-500 dark:text-gray-400 border-gray-100 dark:border-gray-700"
+        id="dashboard-tab"
+        data-tabs-target="#dashboard"
+        type="button"
+        role="tab"
+        aria-controls="dashboard"
+        aria-selected="false"
+      >
+        Dashboard
+      </button>
+    </li>
+    <li class="mr-2" role="presentation">
+      <button
+        class="inline-block p-4 rounded-t-lg border-b-2 border-transparent hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300 dark:border-transparent text-gray-500 dark:text-gray-400 border-gray-100 dark:border-gray-700"
+        id="settings-tab"
+        data-tabs-target="#settings"
+        type="button"
+        role="tab"
+        aria-controls="settings"
+        aria-selected="false"
+      >
+        Settings
+      </button>
+    </li>
+    <li role="presentation">
+      <button
+        class="inline-block p-4 rounded-t-lg border-b-2 border-transparent hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300 dark:border-transparent text-gray-500 dark:text-gray-400 border-gray-100 dark:border-gray-700"
+        id="contacts-tab"
+        data-tabs-target="#contacts"
+        type="button"
+        role="tab"
+        aria-controls="contacts"
+        aria-selected="false"
+      >
+        Contacts
+      </button>
+    </li>
+  </ul>
+</div>
+<div id="myTabContent">
+  <div
+    class="p-4 bg-gray-50 rounded-lg dark:bg-gray-800"
+    id="profile"
+    role="tabpanel"
+    aria-labelledby="profile-tab"
+  >
+    <p>
+      <div class="mt-4 w-full grid grid-cols-4 gap-4">
+        {{< card class="bg-transparent">}}
+          <div class="grid grid-cols-2">
+            <div>
+              <p class="text-blue-600">Tests</p>
+              <p class="text-blue-600 text-3xl font-semibold">  40 </p>
+            </div>
+            <div class="flex w-full justify-end items-center text-blue-600">
+              <div>
+                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+              </div>
+            </div>
+          </div>
+        {{< /card>}}
+        {{< card class="bg-transparent">}}
+        <div class="grid grid-cols-2">
+          <div>
+            <p class="text-teal-600">Passes</p>
+            <p class="text-teal-600 text-3xl font-semibold">20</p>
+          </div>
+          <div class="flex w-full justify-end items-center text-green-600">
+            <div>
+              <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            </div>
+          </div>
+        </div>
+        {{< /card>}}
+        {{< card class="bg-transparent">}}
+        <div class="grid grid-cols-2">
+          <div>
+            <p class="text-red-600">Diffs</p>
+            <p class="text-red-600 text-3xl font-semibold">10</p>
+          </div>
+          <div class="flex w-full justify-end items-center text-red-600">
+            <div>
+              <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            </div>
+          </div>
+        </div>
+        {{< /card>}}
+        {{< card>}}
+          
+        {{< /card>}}
+      </div>
+    </p>
+  </div>
+  <div
+    class="hidden p-4 bg-gray-50 rounded-lg dark:bg-gray-800"
+    id="dashboard"
+    role="tabpanel"
+    aria-labelledby="dashboard-tab"
+  >
+    <p class="text-sm text-gray-500 dark:text-gray-400">
+      This is some placeholder content the
+      <strong class="font-medium text-gray-800 dark:text-white"
+        >Dashboard tab's associated content</strong
+      >. Clicking another tab will toggle the visibility of this one for the
+      next. The tab JavaScript swaps classes to control the content visibility
+      and styling.
+    </p>
+  </div>
+  <div
+    class="hidden p-4 bg-gray-50 rounded-lg dark:bg-gray-800"
+    id="settings"
+    role="tabpanel"
+    aria-labelledby="settings-tab"
+  >
+    <p class="text-sm text-gray-500 dark:text-gray-400">
+      This is some placeholder content the
+      <strong class="font-medium text-gray-800 dark:text-white"
+        >Settings tab's associated content</strong
+      >. Clicking another tab will toggle the visibility of this one for the
+      next. The tab JavaScript swaps classes to control the content visibility
+      and styling.
+    </p>
+  </div>
+  <div
+    class="hidden p-4 bg-gray-50 rounded-lg dark:bg-gray-800"
+    id="contacts"
+    role="tabpanel"
+    aria-labelledby="contacts-tab"
+  >
+    <p class="text-sm text-gray-500 dark:text-gray-400">
+      This is some placeholder content the
+      <strong class="font-medium text-gray-800 dark:text-white"
+        >Contacts tab's associated content</strong
+      >. Clicking another tab will toggle the visibility of this one for the
+      next. The tab JavaScript swaps classes to control the content visibility
+      and styling.
+    </p>
+  </div>
+</div>

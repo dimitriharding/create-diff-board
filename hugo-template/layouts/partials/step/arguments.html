@@ -1,0 +1,5 @@
+{{ if .arguments }} {{ range $index, $argument := .arguments }}
+<div class="whitespace-pre font-mono p-1 ml-10 text-sm">
+  {{ $argument.content }}
+</div>
+{{ end }} {{ end }}

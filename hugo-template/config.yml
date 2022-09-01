@@ -1,0 +1,27 @@
+languageCode: "en"
+title: "Diff Board"
+baseURL: ""
+enableInlineShortcodes: true
+canonifyURLs: true
+
+params:
+  authors: Dimitri Harding
+  social_image_path: /docs/images/og-image.jpg
+
+markup:
+  goldmark:
+    renderer:
+      unsafe: true
+  highlight:
+    noClasses: false
+    style: colorful
+  tableOfContents:
+    startLevel: 2
+    endLevel: 6
+
+buildDrafts: true
+buildFuture: true
+
+enableRobotsTXT: true
+metaDataFormat: "yaml"
+disableKinds: ["404", "taxonomy", "taxonomyTerm", "RSS"]
