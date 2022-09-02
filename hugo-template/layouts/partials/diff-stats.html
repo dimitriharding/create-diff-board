@@ -1,0 +1,18 @@
+<div class="flex mx-5 space-x-8 justify-center">
+  <div>
+    {{ partial "card-with-icon" (dict "title" "Tests" "stat" .totalTests "icon"
+    "bars" "color" "blue") }}
+  </div>
+  <div>
+    {{ partial "card-with-icon" (dict "title" "Passes" "stat" .totalPasses
+    "icon" "passed" "color" "green") }}
+  </div>
+  <div>
+    {{ partial "card-with-icon" (dict "title" "Diffs" "stat" .totalDiffs "icon"
+    "failed" "color" "red") }}
+  </div>
+  <div>
+    {{ partial "card-with-icon" (dict "title" "Endpoints" "stat" .totalEndpoints
+    "icon" "cloud" "color" "yellow") }}
+  </div>
+</div>

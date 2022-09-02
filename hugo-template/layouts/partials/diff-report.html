@@ -1,27 +1,15 @@
-<div class="m-5">
+<div class="mx-36 mt-5">
   {{range $index, $service := .Site.Data.config.tests}}
   <div
-    class="p-5 mb-4 bg-gray-50 rounded-lg border border-gray-100 dark:bg-gray-800 dark:border-gray-700"
+    class="p-5 mb-4 bg-gray-100 rounded-lg border border-gray-100 dark:bg-gray-900 dark:border-gray-700"
   >
   <div class="flex justify-between">
    <div class="flex items-center text-gray-900 dark:text-white align-middle">
     {{/*  service status icon  */}}
     {{ if gt $service.diffCount 0}}
-    <svg class="w-5 h-5 mr-1.5 text-red-500 dark:text-red-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path></svg>
-      <span class="text-lg font-semibol"></span>
+      <div>{{ partial "status-icons/failed" (dict "size" 6) }}</div>
     {{else}}
-    <svg
-        class="w-5 h-5 mr-1.5 text-green-500 dark:text-green-400 flex-shrink-0"
-        fill="currentColor"
-        viewBox="0 0 20 20"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          fill-rule="evenodd"
-          d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-          clip-rule="evenodd"
-        ></path>
-      </svg>
+      <div>{{ partial "status-icons/passed" (dict "size" 6) }}</div>
     {{end}}
     {{/*  service status icon end  */}}
       {{$index}}
@@ -35,7 +23,7 @@
    </div>
     <div class="mt-4" id="accordion-{{$index}}-test" data-accordion="collapse">
       {{ range $itemIndex, $test := $service.items }}
-      <h2 id="accordion-{{$index}}-test-heading-{{md5 $test.name}}">
+      <h2 id="accordion-{{$index}}-test-heading-{{md5 $test.name}}" class="">
         <button
           type="button"
           class="flex items-center justify-between w-full p-2 font-small text-left border border-b-0 border-gray-200 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white"
@@ -46,21 +34,9 @@
           <div class="flex items-start">
             {{/*  service status icon  */}}
             {{ if $test.diffFound}}
-            <svg class="w-6 h-6 mr-1.5 text-red-500 dark:text-red-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path></svg>
-              <span class="text-lg font-semibol"></span>
+            <div>{{ partial "status-icons/failed" (dict "size" 6) }}</div>
             {{else}}
-            <svg
-                class="w-6 h-6 mr-1.5 text-green-500 dark:text-green-400 flex-shrink-0"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                  clip-rule="evenodd"
-                ></path>
-              </svg>
+            <div>{{ partial "status-icons/passed" (dict "size" 6) }}</div>
             {{end}}
             {{/*  service status icon end  */}}
             <span class="font-thin">{{$test.name}}</span>

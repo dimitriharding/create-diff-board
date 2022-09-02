@@ -1,3 +1,5 @@
+const { orange } = require('tailwindcss/colors')
+const colors = require('tailwindcss/colors')
 module.exports = {
   darkMode: 'class',
   content: [
@@ -46,7 +48,17 @@ module.exports = {
           700: '#0E7490',
           800: '#155E75',
           900: '#164E63'
-        }
+        },
+        gray: colors.gray,
+        blue: colors.blue,
+        red: colors.rose,
+        pink: colors.fuchsia,
+        yellow: colors.amber,
+        green: colors.green,
+        purple: colors.violet,
+        white: colors.white,
+        black: colors.black,
+        orange: colors.orange
       }
     },
   },
