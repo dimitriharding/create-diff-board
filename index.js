@@ -11,6 +11,7 @@ const appSingleFileHTML = path.join(modulePath, '/dist/index.html');
 
 // Path to template files from which the project will be created
 const template = `${modulePath}/template`;
+const staticTemplate = `${modulePath}/hugo-template`;
 
 const copyFiles = (source, destination) => {
     return new Promise((resolve, reject) => {
@@ -56,6 +57,17 @@ const packageJSON = (projectName) => {
     };
 };
 
+const staticPackageJSON = (projectName) => {
+    return {
+        name: `${projectName}`,
+        version: package.version,
+        scripts: {
+            dep: "cd ./template && npm i",
+            build: "cd ./template && npm run build",
+        },
+    };
+};
+
 let projectName = "";
 let destination = "";
 
@@ -79,6 +91,40 @@ function startPreview() {
     execSync(`npm run preview`, { cwd: destination, stdio: 'inherit' });
 }
 
+async function staticBuildProject(buildDestination) {
+
+    console.log(colorsx.green(`=> "${projectName}" project building...`));
+
+
+    if (!fsx.existsSync(templateDestination)) {
+        await copyFiles(staticTemplate, templateDestination);
+    }
+
+    // Create the package.json file
+    fsx.writeFileSync(destination + "/package.json", JSON.stringify(staticPackageJSON(projectName), null, 2));
+
+    // copy config to data folder
+    await copyFiles(path.join("./", '/diff-reports', 'config.json'), path.join(templateDestination, '/data/config.json'));
+
+    // copy diff reports to static folder
+    await copyFiles(path.join("./", '/diff-reports'), path.join(templateDestination, '/static'));
+
+    // npm static dependencies
+    execSync(`npm run dep`, { cwd: destination, stdio: [] });
+
+    // npm static build
+    execSync(`npm run build`, { cwd: destination, stdio: [] });
+
+    // copy build folder to destination
+    await copyFiles(path.join(templateDestination, '.build'), buildDestination);
+
+    // delete template folder
+    fsx.removeSync(templateDestination);
+
+    console.log(colorsx.green(`=> "${projectName}" project built!`));
+    console.log(colorsx.green(`=> View static HTML at ${buildDestination}/index.html"`));
+}
+
 async function devBuildProject() {
     console.log(colorsx.green(`=> "${projectName}" project building...`));
     // check if template folder exists
@@ -97,30 +143,33 @@ async function devBuildProject() {
 async function main() {
     const buildDestination = path.join(destination, "/build");
 
-    console.log(colorsx.green(`=> "${projectName}" project building...`));
+    // if on CI server, build static project
+    if (process.env.ON_CI) {
+        await staticBuildProject(buildDestination);
+        return;
+    } else {
+        console.log(colorsx.green(`=> "${projectName}" project building...`));
 
-    // create build folder with diff results
-    await copyFiles(path.join("./", '/diff-reports'), buildDestination);
+        // create build folder with diff results
+        await copyFiles(path.join("./", '/diff-reports'), buildDestination);
 
-    // read config file
-    const config = fsx.readFileSync(path.join("./", '/diff-reports', 'config.json'), 'utf8');
+        // read config file
+        const config = fsx.readFileSync(path.join("./", '/diff-reports', 'config.json'), 'utf8');
 
-    // read application script
-    const indexJs = fsx.readFileSync(path.join(path.join(modulePath, 'dist/index.js')));
+        // read application script
+        const indexJs = fsx.readFileSync(path.join(path.join(modulePath, 'dist/index.js')));
 
-    // HTML with JavaScript and Config JSON
-    const html = configHtml(JSON.parse(config), indexJs);
+        // HTML with JavaScript and Config JSON
+        const html = configHtml(JSON.parse(config), indexJs);
 
-    // copy index.html to build folder
-    fsx.writeFileSync(path.join(buildDestination + '/index.html'), html);
+        // copy index.html to build folder
+        fsx.writeFileSync(path.join(buildDestination + '/index.html'), html);
 
-    // Create the package.json file
-    fsx.writeFileSync(destination + "/package.json", JSON.stringify(packageJSON(projectName), null, 2));
+        // Create the package.json file
+        fsx.writeFileSync(destination + "/package.json", JSON.stringify(packageJSON(projectName), null, 2));
 
-    console.log(colorsx.grey(`=> To serve the build, run: ${colorsx.magenta(`npx serve ${projectName}/build -p 5050`)}`));
+        console.log(colorsx.grey(`=> To serve the build, run: ${colorsx.magenta(`npx serve ${projectName}/build -p 5050`)}`));
 
-    // if ci-server is not set, start the preview
-    if (!process.env.ON_CI) {
         startPreview();
     }
 }
