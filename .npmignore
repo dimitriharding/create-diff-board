@@ -4,6 +4,8 @@ node_modules
 package-lock.json
 template/package-lock.json
 template/pnpm-lock.yaml
+react-template/package-lock.json
 template
 build
 media
+react-template
