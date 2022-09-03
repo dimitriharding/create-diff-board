@@ -1,6 +1,6 @@
 {
   "name": "create-diff-board",
-  "version": "1.1.0",
+  "version": "1.0.12",
   "description": "",
   "bin": "index.js",
   "scripts": {
@@ -10,7 +10,7 @@
     "preview": "cd ./template && npm run preview",
     "prepreview": "npm run build",
     "dep": "cd ./template && npm i --force",
-    "publish": "npm run zip && npm publish",
+    "pub": "npm run zip && npm publish",
     "zip": "node ./package-template.js",
     "build:static": "cd ./template-temp && ../node_modules/.bin/hugo"
   },
