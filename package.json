@@ -17,6 +17,7 @@
   "dependencies": {
     "colors": "^1.4.0",
     "commander": "^9.3.0",
-    "fs-extra": "^10.1.0"
+    "fs-extra": "^10.1.0",
+    "hugo-bin": "^0.89.0"
   }
 }

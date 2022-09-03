@@ -17,3 +17,7 @@ release
 .release
 .DS_Store
 data/config.json
+static/actual_cucumber_report.html
+static/actual_cucumber_report.json
+static/expected_cucumber_report.html
+static/expected_cucumber_report.json

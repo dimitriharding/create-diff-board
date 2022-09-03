@@ -10,12 +10,13 @@
     document.documentElement.classList.remove("dark");
   }
 </script>
-<script async defer src="https://buttons.github.io/buttons.js"></script>
-<script src="{{ .Site.BaseURL }}assets/app.bundle.js"></script>
+<script>
+  {{ readFile "static/app.bundle.js" | safeJS }}
+</script>
 <script>
   var themeToggleDarkIcon = document.getElementById("theme-toggle-dark-icon");
   var themeToggleLightIcon = document.getElementById("theme-toggle-light-icon");
-
+  localStorage.setItem("color-theme", "dark");
   // Change the icons inside the button based on previous settings
   if (
     localStorage.getItem("color-theme") === "dark" ||
@@ -56,15 +57,3 @@
     }
   });
 </script>
-<script
-  src="https://wzrd.in/standalone/copy-html-to-clipboard@latest"
-  async
-></script>
-<script
-  crossorigin
-  src="https://unpkg.com/react@16/umd/react.development.js"
-></script>
-<script
-  crossorigin
-  src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"
-></script>
