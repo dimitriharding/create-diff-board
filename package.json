@@ -1,6 +1,6 @@
 {
   "name": "create-diff-board",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "description": "",
   "bin": "index.js",
   "scripts": {
@@ -12,7 +12,7 @@
     "dep": "cd ./template && npm i --force",
     "pub": "npm run zip && npm publish",
     "zip": "node ./package-template.js",
-    "build:static": "cd ./template-temp && ../node_modules/.bin/hugo"
+    "build:static": "cd ./template-temp && npx hugo"
   },
   "keywords": [],
   "author": "Dimitri Harding",

@@ -20,7 +20,6 @@ const copyFiles = (source, destination) => {
                 console.log(colorsx.red("=> There was an error while copying the files: ", err));
             }
             resolve();
-            console.log(colorsx.grey("=> Files copied " + destination));
         });
     });
 };
@@ -115,13 +114,15 @@ async function staticBuildProject(buildDestination) {
     // delete template folder
     fsx.removeSync(moduleTemplateDestination);
 
-    // delete app.bundle.js, app.css. .gitkeep
+    // delete app.bundle.js, app.css. .gitkeep, robots.txt, sitemap.xml
     fsx.removeSync(path.join(buildDestination, 'app.bundle.js'));
     fsx.removeSync(path.join(buildDestination, 'app.css'));
     fsx.removeSync(path.join(buildDestination, '.gitkeep'));
+    fsx.removeSync(path.join(buildDestination, 'robots.txt'));
+    fsx.removeSync(path.join(buildDestination, 'sitemap.xml'));
 
     console.log(colorsx.green(`=> "${projectName}" project built!`));
-    console.log(colorsx.green(`=> View static HTML at: ${colorsx.blue(path.resolve(buildDestination, "index.html"))}`));
+    console.log(colorsx.green(`=> View static HTML at: ${colorsx.blue('report/' + projectName + '/build/index.html')}`));
 }
 
 async function devBuildProject() {
