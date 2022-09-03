@@ -1,6 +1,7 @@
-{{ define "main" }} {{ partial "navbar-dashboard" . }}
+{{ define "main" }} {{ $diffConfig := site.Data.config }} {{ partial
+"navbar-dashboard" (dict "title" $diffConfig.title "brandTitle"
+$diffConfig.brandTitle) }}
 <div class="flex overflow-hidden bg-white dark:bg-gray-800 pt-16">
-  {{ $diffConfig := site.Data.config }}
   <div
     class="h-full w-full bg-gray-50 dark:bg-gray-800 relative overflow-y-auto"
   >

@@ -8,11 +8,9 @@ const colorsx = require("colors");
 const zipper = require('zip-local');
 
 const modulePath = __dirname;
-const appSingleFileHTML = path.join(modulePath, '/dist/index.html');
 
 // Path to template files from which the project will be created
 const template = `${modulePath}/template`;
-const staticTemplate = `${modulePath}/static-template`;
 
 const copyFiles = (source, destination) => {
     return new Promise((resolve, reject) => {
@@ -58,19 +56,6 @@ const packageJSON = (projectName) => {
     };
 };
 
-const staticPackageJSON = (projectName) => {
-    return {
-        name: `${projectName}`,
-        version: package.version,
-        scripts: {
-            dep: "cd ./template && npm i",
-            build: "cd ./template && hugo --destination build",
-        },
-        dependencies: {
-            "hugo-bin": "^0.89.0"
-        }
-    };
-};
 
 let projectName = "";
 let destination = "";
@@ -90,6 +75,7 @@ program.parse();
 const options = program.opts();
 destination = path.join("./", projectName);
 const templateDestination = path.join(destination, "/template");
+const moduleTemplateDestination = path.join(modulePath, "/template-temp");
 
 function startPreview() {
     execSync(`npm run preview`, { cwd: destination, stdio: 'inherit' });
@@ -99,42 +85,43 @@ async function staticBuildProject(buildDestination) {
 
     console.log(colorsx.green(`=> "${projectName}" project building...`));
 
-    if (!fsx.existsSync(templateDestination)) {
+    if (!fsx.existsSync(moduleTemplateDestination)) {
         // create destination folder
-        fsx.mkdirSync(templateDestination, { recursive: true });
-        zipper.sync.unzip(path.resolve(modulePath, 'static-template.zip')).save(path.resolve(templateDestination));
+        fsx.mkdirSync(moduleTemplateDestination, { recursive: true });
+        zipper.sync.unzip(path.resolve(modulePath, 'static-template.zip')).save(path.resolve(moduleTemplateDestination));
     } else {
         // remove template folder
-        fsx.removeSync(templateDestination);
-        fsx.mkdirSync(templateDestination, { recursive: true });
-        zipper.sync.unzip(path.resolve(modulePath, 'static-template.zip')).save(path.resolve(templateDestination));
+        fsx.removeSync(moduleTemplateDestination);
+        fsx.mkdirSync(moduleTemplateDestination, { recursive: true });
+        zipper.sync.unzip(path.resolve(modulePath, 'static-template.zip')).save(path.resolve(moduleTemplateDestination));
     }
 
-    // Create the package.json file
-    fsx.writeFileSync(destination + "/package.json", JSON.stringify(staticPackageJSON(projectName), null, 2));
-
     // copy config to data folder
-    await copyFiles(path.join("./", '/diff-reports', 'config.json'), path.join(templateDestination, '/data/config.json'));
+    await copyFiles(path.join("./", '/diff-reports', 'config.json'), path.join(moduleTemplateDestination, '/data/config.json'));
 
     // copy diff reports to static folder
-    await copyFiles(path.join("./", '/diff-reports'), path.join(templateDestination, '/static'));
+    await copyFiles(path.join("./", '/diff-reports'), path.join(moduleTemplateDestination, '/static'));
+
 
     // npm static dependencies
-    execSync(`npm run dep`, { cwd: destination, stdio: [] });
+    execSync(`npm run build:static`, { cwd: modulePath, stdio: [] });
 
     // npm static build
-    execSync(`npm run build`, { cwd: destination, stdio: [] });
 
     // copy build folder to destination
-    await copyFiles(path.join(templateDestination, 'build'), buildDestination);
+    await copyFiles(path.join(moduleTemplateDestination, 'public'), buildDestination);
+
 
     // delete template folder
-    fsx.removeSync(templateDestination);
-    // delete node_modules folder
-    fsx.removeSync(path.join(destination, 'node_modules'));
+    fsx.removeSync(moduleTemplateDestination);
+
+    // delete app.bundle.js, app.css. .gitkeep
+    fsx.removeSync(path.join(buildDestination, 'app.bundle.js'));
+    fsx.removeSync(path.join(buildDestination, 'app.css'));
+    fsx.removeSync(path.join(buildDestination, '.gitkeep'));
 
     console.log(colorsx.green(`=> "${projectName}" project built!`));
-    console.log(colorsx.green(`=> View static HTML at: ${path.resolve(buildDestination, "index.html")}`));
+    console.log(colorsx.green(`=> View static HTML at: ${colorsx.blue(path.resolve(buildDestination, "index.html"))}`));
 }
 
 async function devBuildProject() {

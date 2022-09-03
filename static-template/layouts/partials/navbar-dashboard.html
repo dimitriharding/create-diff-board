@@ -11,10 +11,10 @@
             {{ partial "logo" (dict "size" 6) }}
           </span>
          
-          <span class="self-center whitespace-nowrap dark:text-white">DIFF Testing</span> 
+          <span class="self-center whitespace-nowrap dark:text-white">{{if .brandTitle }}<span>{{.brandTitle}}</span>{{else}}DIFF Testing{{end}}</span> 
         </a>
       </div>
-      <span class="text-xl font-semibold dark:text-white text-gray-900">Regression Tests</span>
+      <span class="text-xl font-semibold dark:text-white text-gray-900">{{if .title }}<span>{{.title}}</span>{{else}}Regression Test{{end}}</span>
       <div class="flex items-center">
         <a href="https://github.com/dimitriharding/create-diff-board" target="_blank" class="mr-3 text-gray-500 dark:text-gray-400 bg-gray-100  dark:bg-gray-700 hover:bg-gray-200  dark:hover:bg-gray-800 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5">
           <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
