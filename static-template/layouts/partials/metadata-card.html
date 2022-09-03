@@ -1,0 +1,17 @@
+<div
+  class="p-2 border border-1 border-gray-700 w-[400px] rounded-lg flex flex-col dark:bg-gray-900 bg-white"
+>
+  <div class="flex justify-center">
+    <p class="mb-5 text-sm text-gray-500 uppercase font-medium">{{.title}}</p>
+  </div>
+  <ul
+    class="mb-4 space-y-2 list-none list-inside text-gray-500 dark:text-gray-400"
+  >
+    {{range $index, $item := .items}}
+    <li>
+      <span class="font-thin uppercase"> {{$index}}: </span>
+      <span class="font-thin dark:text-white text-gray-600">{{$item}}</span>
+    </li>
+    {{end}}
+  </ul>
+</div>

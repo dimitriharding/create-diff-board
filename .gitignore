@@ -25,3 +25,4 @@ dist-ssr
 *.sw?
 
 react-template
+static-template/data/config.json

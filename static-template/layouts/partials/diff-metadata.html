@@ -1,0 +1,10 @@
+<div class="mt-5 flex justify-center space-x-10">
+  <div>
+    {{ partial "metadata-card" (dict "title" "actual metadata" "items"
+    .metadata.actual) }}
+  </div>
+  <div>
+    {{ partial "metadata-card" (dict "title" "expected metadata" "items"
+    .metadata.expected) }}
+  </div>
+</div>

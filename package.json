@@ -9,7 +9,8 @@
     "build": "cd ./template && npm run build",
     "preview": "cd ./template && npm run preview",
     "prepreview": "npm run build",
-    "dep": "cd ./template && npm i --force"
+    "dep": "cd ./template && npm i --force",
+    "build:static": "hugo ./static-template"
   },
   "keywords": [],
   "author": "Dimitri Harding",

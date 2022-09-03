@@ -1,0 +1,20 @@
+
+<div class="flex flex-col justify-center">
+  <p class="flex font-thin text-gray-900 dark:text-white justify-center">
+    CURL Commands (click to copy)
+  </p>
+  <div class="flex justify-center">
+    {{$curl1 := md5 .actual.curl}}
+    {{$curl2 := md5 .expected.curl}}
+    <div id="{{printf "curl-toast-%s" $curl1}}"></div>
+    <div id="{{printf "curl-toast-%s" $curl2}}"></div>
+  </div>
+  <div class="flex p-2 space-x-2">
+    <div class="w-1/2">
+      {{ partial "curl-card.html" (dict "curl" .actual.curl) }}
+    </div>
+    <div class="w-1/2">
+      {{ partial "curl-card.html" (dict "curl" .expected.curl) }}
+    </div>
+  </div>
+</div>

@@ -11,7 +11,7 @@ const appSingleFileHTML = path.join(modulePath, '/dist/index.html');
 
 // Path to template files from which the project will be created
 const template = `${modulePath}/template`;
-const staticTemplate = `${modulePath}/hugo-template`;
+const staticTemplate = `${modulePath}/static-template`;
 
 const copyFiles = (source, destination) => {
     return new Promise((resolve, reject) => {
@@ -63,8 +63,11 @@ const staticPackageJSON = (projectName) => {
         version: package.version,
         scripts: {
             dep: "cd ./template && npm i",
-            build: "cd ./template && npm run build",
+            build: "cd ./template && hugo --destination build",
         },
+        dependencies: {
+            "hugo-bin": "^0.89.0"
+        }
     };
 };
 
@@ -98,6 +101,10 @@ async function staticBuildProject(buildDestination) {
 
     if (!fsx.existsSync(templateDestination)) {
         await copyFiles(staticTemplate, templateDestination);
+    } else {
+        // remove template folder
+        fsx.removeSync(templateDestination);
+        await copyFiles(staticTemplate, templateDestination);
     }
 
     // Create the package.json file
@@ -116,13 +123,15 @@ async function staticBuildProject(buildDestination) {
     execSync(`npm run build`, { cwd: destination, stdio: [] });
 
     // copy build folder to destination
-    await copyFiles(path.join(templateDestination, '.build'), buildDestination);
+    await copyFiles(path.join(templateDestination, 'build'), buildDestination);
 
     // delete template folder
     fsx.removeSync(templateDestination);
+    // delete node_modules folder
+    fsx.removeSync(path.join(destination, 'node_modules'));
 
     console.log(colorsx.green(`=> "${projectName}" project built!`));
-    console.log(colorsx.green(`=> View static HTML at ${buildDestination}/index.html"`));
+    console.log(colorsx.green(`=> View static HTML at: ${path.resolve(buildDestination, "index.html")}`));
 }
 
 async function devBuildProject() {

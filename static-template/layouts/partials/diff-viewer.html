@@ -1,0 +1,12 @@
+<div
+  id="diff-data-{{ .id }}"
+  data-actual="{{ jsonify .actual.response }}"
+  data-expected="{{ jsonify .expected.response }}"
+  data-name="{{ .name }}"
+  class="w-full cursor-pointer font-mono whitespace-nowrap overflow-auto p-2 text-sm text-blue-700 rounded-lg"
+></div>
+<div class="mb-4">
+  {{$idModal := printf "modal-%s" .id}} {{ partial "json-viewer" (dict "id"
+  $idModal "leftJson" .actual.response "rightJson" .expected.response "name"
+  .name) }}
+</div>

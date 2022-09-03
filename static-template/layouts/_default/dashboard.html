@@ -1,0 +1,92 @@
+{{ define "main" }} {{ partial "navbar-dashboard" . }}
+<div class="flex overflow-hidden bg-white dark:bg-gray-800 pt-16">
+  {{ $diffConfig := site.Data.config }}
+  <div
+    class="h-full w-full bg-gray-50 dark:bg-gray-800 relative overflow-y-auto"
+  >
+    <main>
+      <div class="mb-4 mt-2">
+        {{ $createdAt := time.Format "Monday, Jan 2, 2006" $diffConfig.createdAt
+        }} {{ partial "generated-at" (dict "date" $createdAt) }}
+        <ul
+          class="flex flex-wrap -mb-px text-sm font-medium text-center justify-center"
+          id="diffTab"
+          data-tabs-toggle="#diffTabContent"
+          role="tablist"
+        >
+          <li class="mr-2">
+            <a
+              href="#diff-report"
+              class="inline-block p-4 rounded-t-lg border-b-2"
+              aria-current="page"
+              id="diff-tab"
+              role="tab"
+              aria-controls="diff"
+              aria-selected="false"
+              data-tabs-target="#diff"
+              >Diff Report</a
+            >
+          </li>
+          <li class="mr-2">
+            <a
+              href="#actual-cucumber-report"
+              class="inline-block p-4 rounded-t-lg border-b-2 border-transparent hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
+              aria-current="page"
+              id="apitestactual-tab"
+              role="tab"
+              aria-controls="apitestactual"
+              aria-selected="false"
+              data-tabs-target="#apitestactual"
+              >Actual Cucumber Report</a
+            >
+          </li>
+          <li class="mr-2">
+            <a
+              href="#expected-cucumber-report"
+              class="inline-block p-4 rounded-t-lg border-b-2 border-transparent hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
+              aria-current="page"
+              id="apitestexpected-tab"
+              role="tab"
+              aria-controls="apitestexpected"
+              aria-selected="false"
+              data-tabs-target="#apitestexpected"
+              >Expected Cucumber Report</a
+            >
+          </li>
+        </ul>
+      </div>
+      <div id="diffTabContent">
+        <div
+          class="bg-gray-50 rounded-lg dark:bg-gray-800"
+          id="diff"
+          role="tab"
+          aria-labelledby="diff-tab"
+        >
+          <div>{{ partial "diff-stats" $diffConfig }}</div>
+          <div>{{ partial "diff-metadata" $diffConfig }}</div>
+          <div>{{ partial "diff-report" . }}</div>
+        </div>
+        <div
+          class="bg-gray-50 rounded-lg dark:bg-gray-800"
+          id="apitestactual"
+          role="tab"
+          aria-labelledby="apitestactual-tab"
+        >
+          {{ partial "cucumber-report.html" (dict "file"
+          "static/actual_cucumber_report.html") }}
+        </div>
+        <div
+          class="bg-gray-50 rounded-lg dark:bg-gray-800"
+          id="apitestexpected"
+          role="tab"
+          aria-labelledby="apitestexpected-tab"
+        >
+          {{ partial "cucumber-report.html" (dict "file"
+          "static/expected_cucumber_report.html") }}
+        </div>
+      </div>
+    </main>
+    {{ if .Params.footer }} {{ partial "footer-dashboard" . }} {{ end }}
+  </div>
+</div>
+{{ end }}

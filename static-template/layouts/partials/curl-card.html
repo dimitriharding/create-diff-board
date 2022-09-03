@@ -1,0 +1,9 @@
+{{$id := md5 .curl}}
+{{$data := .curl | base64Encode}}
+<button
+  id="{{printf "curl-%s" $id}}"
+  class="w-full cursor-pointer font-mono whitespace-nowrap overflow-auto p-2 mb-4 text-sm text-blue-700 bg-blue-100 rounded-lg dark:bg-blue-200 dark:text-blue-800"
+  data-curl="{{$data}}"
+>
+  {{.curl}}
+</button>
