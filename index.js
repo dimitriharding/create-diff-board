@@ -5,6 +5,7 @@ const { execSync } = require("child_process");
 const path = require("path");
 const fsx = require("fs-extra");
 const colorsx = require("colors");
+const zipper = require('zip-local');
 
 const modulePath = __dirname;
 const appSingleFileHTML = path.join(modulePath, '/dist/index.html');
@@ -98,13 +99,15 @@ async function staticBuildProject(buildDestination) {
 
     console.log(colorsx.green(`=> "${projectName}" project building...`));
 
-
     if (!fsx.existsSync(templateDestination)) {
-        await copyFiles(staticTemplate, templateDestination);
+        // create destination folder
+        fsx.mkdirSync(templateDestination, { recursive: true });
+        zipper.sync.unzip(path.resolve(modulePath, 'static-template.zip')).save(path.resolve(templateDestination));
     } else {
         // remove template folder
         fsx.removeSync(templateDestination);
-        await copyFiles(staticTemplate, templateDestination);
+        fsx.mkdirSync(templateDestination, { recursive: true });
+        zipper.sync.unzip(path.resolve(modulePath, 'static-template.zip')).save(path.resolve(templateDestination));
     }
 
     // Create the package.json file
